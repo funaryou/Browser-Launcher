@@ -1,0 +1,115 @@
+{
+  "name": "browser-launcher",
+  "displayName": "BrowseDock",
+  "description": "BrowseDock — サイドバーからお気に入りのWebページを新しいブラウザ表示で開きます。",
+  "version": "0.2.0",
+  "publisher": "browser-launcher-local",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "extensionKind": [
+    "ui"
+  ],
+  "activationEvents": [
+    "onView:browserLauncher.links",
+    "onCommand:browserLauncher.openNew",
+    "onCommand:browserLauncher.openSettings"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "browserLauncher",
+          "title": "BrowseDock",
+          "icon": "media/browser.svg"
+        }
+      ]
+    },
+    "views": {
+      "browserLauncher": [
+        {
+          "id": "browserLauncher.links",
+          "name": "BrowseDock"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "browserLauncher.openNew",
+        "title": "新規ブラウザを開く",
+        "category": "BrowseDock",
+        "icon": "$(add)"
+      },
+      {
+        "command": "browserLauncher.openSettings",
+        "title": "設定を開く",
+        "category": "BrowseDock",
+        "icon": "$(settings-gear)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "browserLauncher.openNew",
+          "when": "view == browserLauncher.links",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "BrowseDock",
+      "properties": {
+        "browserLauncher.defaultUrl": {
+          "type": "string",
+          "default": "http://localhost:3000",
+          "description": "新規ブラウザで入力するURLの初期値。http://またはhttps://から指定してください。"
+        },
+        "browserLauncher.bookmarks": {
+          "type": "array",
+          "default": [],
+          "description": "クリックで新しいブラウザを開くお気に入り一覧。",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "url"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "description": "表示名"
+              },
+              "url": {
+                "type": "string",
+                "pattern": "^[hH][tT][tT][pP][sS]?://",
+                "description": "httpまたはhttpsのURL"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "watch": "tsc -watch -p .",
+    "test": "npm run compile && node --test test/*.test.cjs",
+    "vscode:prepublish": "npm run compile",
+    "package": "vsce package --no-dependencies --allow-missing-repository --out browsedock-0.2.0.vsix"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.14",
+    "@types/vscode": "1.80.0",
+    "@vscode/vsce": "4.0.0",
+    "typescript": "5.8.3"
+  },
+  "icon": "media/icon.png"
+}
